@@ -1,11 +1,9 @@
 export class Product {
+  id: number;
 
-    id: number;
+  name: string;
 
-    name: string;
+  price: number;
 
-    price: number;
-
-    description: string;
-
+  description: string;
 }
