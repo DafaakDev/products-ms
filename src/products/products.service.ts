@@ -50,8 +50,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
       where: { id, available: true },
     });
 
-    if (!product)
+    if (!product) {
+      this.logger.error(`Product with id ${id} not found`);
       throw new NotFoundException(`Product with id ${id} not found`);
+    }
 
     return product;
   }
@@ -67,8 +69,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
       });
     } catch (error) {
       if (error.code === "P2025") {
+        this.logger.error(`Product with id ${id} not found`);
         throw new NotFoundException(`Product with id ${id} not found`);
       }
+      this.logger.error(`Error: `, error.message);
       throw error;
     }
   }
@@ -78,8 +82,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
       return this.product.update({ where: { id }, data: { available: false } });
     } catch (error) {
       if (error.code === "P2025") {
+        this.logger.error(`Product with id ${id} not found`);
         throw new NotFoundException(`Product with id ${id} not found`);
       }
+      this.logger.error(`Error: `, error.message);
       throw error;
     }
   }
