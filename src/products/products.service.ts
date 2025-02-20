@@ -69,23 +69,40 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     } catch (error) {
       if (error.code === "P2025") {
         this.logger.error(`Product with id ${id} not found`);
-        throw new RpcException(`Product with id ${id} not found`);
+        throw new RpcException({
+          status: HttpStatus.BAD_REQUEST,
+          message: `Product with id ${id} not found`,
+        });
       }
       this.logger.error(`Error: `, error.message);
-      throw error;
+      throw new RpcException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message,
+      });
     }
   }
 
   async remove(id: number) {
     try {
-      return this.product.update({ where: { id }, data: { available: false } });
+      return await this.product.update({
+        where: { id },
+        data: { available: false },
+      });
     } catch (error) {
       if (error.code === "P2025") {
         this.logger.error(`Product with id ${id} not found`);
-        throw new RpcException(`Product with id ${id} not found`);
+        throw new RpcException({
+          status: HttpStatus.BAD_REQUEST,
+          message: `Product with id ${id} not found`,
+        });
       }
+
       this.logger.error(`Error: `, error.message);
-      throw error;
+
+      throw new RpcException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: error.message,
+      });
     }
   }
 }
